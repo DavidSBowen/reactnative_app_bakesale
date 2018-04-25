@@ -7,6 +7,8 @@ import {
     View
 } from 'react-native';
 
+import DealList from './DealList';
+
 import ajax from './../ajax';
 
 const instructions = Platform.select({
@@ -18,15 +20,27 @@ const instructions = Platform.select({
 
 class App extends Component {
 
+    state = {
+        deals: [],
+    }
+
     async componentDidMount() {
         const deals = await ajax.fetchInitialDeals();
-        console.log(deals);
-    }
+        this.setState((prevState) => {
+            return { deals: deals };
+        });
+    };
 
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.containerText}>Bakesale!</Text>
+                {
+                    this.state.deals.length > 0
+                        ?
+                        <DealList deals={this.state.deals} />
+                        :
+                        <Text style={styles.containerText}>Bakesale!</Text>
+                }
             </View>
         );
     }
